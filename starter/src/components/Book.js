@@ -40,12 +40,12 @@ const Book = ({book,onChangeShelf}) => {
         ></div>
         <div className="book-shelf-changer">
         <select onChange={UpdateShelf} value={selected}>
-            <option value="none" disabled>Move to...</option>
+        <option value="none" disabled>{isShelfUndefined ? 'Add to' : 'Move to...'}</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>
             <option value="read">Read</option>
-            <option value="none">None</option>
-          </select>
+            {isShelfUndefined ? '' : <option value="none">None</option>}
+            </select>         
         </div>
       </div>
       <div className="book-title">{book.title}</div>
