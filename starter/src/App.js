@@ -10,38 +10,44 @@ import {
 
 
 import Home from "./components/Home";
+
 import Search from "./components/Search";
 
 
 
 const App = () => {
   const [books, setBooks] = useState([]);
-  let navigate = useNavigate();
-
-
-  useEffect(() => {
-    const getBooks = async () => {
-      const response = await BooksAPI.getAll();
-      setBooks(response);
-    };
-    getBooks();
-  }, []);
-
-
+  let UseNav = useNavigate();
   const changeShelf = (book, shelf) => {
-    const updateBooks = async () => {
+    const bookUpdate = async () => {
       await BooksAPI.update(book, shelf);
       const response = await BooksAPI.getAll();
       setBooks(response);
     };
-    updateBooks();
-    navigate('/');
+
+    bookUpdate();
+
+    UseNav('/');
+
   };
+
+  useEffect(() => {
+    const getAllBooks = async () => {
+
+      const response = await BooksAPI.getAll();
+
+      setBooks(response);
+
+    };
+
+    getAllBooks();}, []);
+
+
 
   return (
     <Routes>
-      <Route exact path="/" element={<Home books={books} changeShelf={changeShelf}></Home>} ></Route>
-      <Route exact path="/search" element={<Search books={books} changeShelf={changeShelf}></Search>} ></Route>
+      <Route exact path="/" element={<Home books={books} changeShelf={changeShelf} />} ></Route>
+      <Route exact path="/search" element={<Search books={books} changeShelf={changeShelf} />} ></Route>
     </Routes>
   );
 };
