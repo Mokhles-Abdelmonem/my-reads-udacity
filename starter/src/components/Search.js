@@ -4,65 +4,57 @@ import { useState, useEffect } from 'react';
 import Book from './Book';
 import * as BooksAPI from './BooksAPI';
 
-const Search = ({ books, changeShelf }) => {
-  const [queryValue, setQueryValue] = useState('');
-  const [resbooks, setResBooks] = useState('');
 
-  const updateQueryValue = (queryValue) => {
-    setQueryValue(queryValue);
-  };
+const Search = ({ books, changeShelf }) => {
+  const [searchValue, setSearchValue] = useState("");
+  const [booksRes, setBooks] = useState('');
+  const handleSearchInputChanges = (e) => {
+    setSearchValue(e.target.value);
+  }
 
   useEffect(() => {
-    const timeOut = setTimeout(() => {
-      const fetch = async () => {
-        const res = await BooksAPI.search(String(queryValue));
-        res.error !== 'empty query'
-          ? compareShelfBooks(res, books)
-          : setResBooks();
+    const bookFetch = async () => {
+      const result = await BooksAPI.search(String(searchValue));
+      console.log(result);
+
+      if (result.error !== 'empty query') {
+        setBooks(result)
+      }else{
+        setBooks();
       };
-      queryValue !== '' ? fetch() : setResBooks();
-    }, 500);
-    return () => clearTimeout(timeOut);
-  }, [books, queryValue]);
-
-  const compareShelfBooks = (resBooks, shelfBooks) => {
-    const bookUpdates = Object.fromEntries(
-      shelfBooks.map((temp) => [temp.id, temp])
-    );
-    const updatedBooks = resBooks.map((temp) => bookUpdates[temp.id] || temp);
-    setResBooks(updatedBooks);
-  };
-
+      
+    };
+    if (searchValue !== ''){
+      bookFetch()
+    }else{
+      setBooks();
+    };
+}, [books,searchValue]);
   return (
     <div className="search-books">
       <div className="search-books-bar">
-        <Link className="close-search" to="/">
-          Close
-        </Link>
+        <Link className="close-search" to="/">Close</Link>
         <div className="search-books-input-wrapper">
           <input
             type="text"
             name="book-data"
             placeholder="Search by title, author, or ISBN"
-            value={queryValue}
-            onChange={(event) => updateQueryValue(event.target.value)}
-          />
+            value={searchValue}
+            onChange={handleSearchInputChanges}/>
         </div>
       </div>
       <div className="search-books-results">
         <ol className="books-grid"></ol>
       </div>
       <ol className="books-grid">
-        {resbooks ? (
-          resbooks.map((book) => (
+        {booksRes ? (booksRes.map((book) => (
             <li key={book.id}>
               <Book
                 key={book.id}
                 book={book}
-                onChangeShelf={changeShelf}
-              ></Book>
-            </li>
-          ))
+                onChangeShelf={changeShelf}>
+              </Book>
+            </li>))
         ) : (
           <div>
             <p>No Books found</p>

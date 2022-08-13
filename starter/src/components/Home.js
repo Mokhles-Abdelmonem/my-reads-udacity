@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import Shelf from './Shelf'
 const Home = ({books, changeShelf}) => {
 
-    const [showSearchPage, setShowSearchpage] = useState(false);
-
     return (
   
       <div className="list-books">
@@ -21,7 +19,6 @@ const Home = ({books, changeShelf}) => {
         </div>
       </div>
       <div className="open-search">
-        {/* <a href='' onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a> */}
         <Link to="/search"  className="open-search-link" >Add a book</Link>
 
       </div>
